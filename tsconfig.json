@@ -2,6 +2,10 @@
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
   "compilerOptions": {
+    "isolatedModules": true,
+    "strict": true,
+    "target": "esnext",
+    "lib": ["esnext", "dom"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
