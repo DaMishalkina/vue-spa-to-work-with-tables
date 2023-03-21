@@ -14,9 +14,12 @@ export default defineComponent ({
   components: {TableRow},
   data(){
     return {
+      pageNumber: 1 as number,
+      rowsPerPage: 50 as number,
     }
   },
   props: {
+    tableHeaders: Array,
     tableData: {
       type: Array as PropType<Objects>,
       default: () =>  []
@@ -26,9 +29,6 @@ export default defineComponent ({
     tableDataArray(){
       return JSON.parse(JSON.stringify(this.tableData));
     }
-  },
-  methods: {
-
   }
 })
 </script>
@@ -36,11 +36,7 @@ export default defineComponent ({
   <table>
     <thead>
       <tr>
-        <td>postId</td>
-        <td>id</td>
-        <td>name</td>
-        <td>email</td>
-        <td>body</td>
+        <th v-for="(header, index) in this.tableHeaders" :key="index">{{header}}</th>
       </tr>
     </thead>
     <tbody>
@@ -48,4 +44,5 @@ export default defineComponent ({
     </tbody>
   </table>
 </template>
-<style></style>
+<style>
+</style>

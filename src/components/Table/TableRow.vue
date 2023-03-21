@@ -28,7 +28,7 @@ export default defineComponent({
 
 <template>
   <tr>
-    <TableItem v-for="(value, index) in rowDataValues" :key=index :value="value"/>
+    <TableItem v-for="(value, index) in rowDataValues.splice(1)" :key=index :value="value"/>
   </tr>
 </template>
 <style></style>
