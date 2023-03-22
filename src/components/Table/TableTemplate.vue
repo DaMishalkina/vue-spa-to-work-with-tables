@@ -2,6 +2,7 @@
 import {defineComponent} from "vue";
 
 import TableRow from "./TableRow.vue";
+import SearchComponent from "../SearchComponent.vue";
 
 import type { PropType } from "vue";
 
@@ -11,7 +12,7 @@ interface Object {
 
 interface Objects extends Array<Object>{}
 export default defineComponent ({
-  components: {TableRow},
+  components: {TableRow, SearchComponent},
   data(){
     return {
       pageNumber: 1 as number,
@@ -19,6 +20,11 @@ export default defineComponent ({
     }
   },
   props: {
+    searchValues: {
+      type: Object as PropType<Object>,
+      required: false,
+    },
+    handleInput: Function,
     tableHeaders: Array,
     tableData: {
       type: Array as PropType<Objects>,
@@ -29,6 +35,16 @@ export default defineComponent ({
     tableDataArray(){
       return JSON.parse(JSON.stringify(this.tableData));
     }
+  },
+  methods:{
+    onInput(event: InputEvent){
+      this.handleInput !== undefined && this.handleInput(event)
+    },
+    isFieldSearchable(index: string){
+      return Object.keys(this.searchValues as Object).indexOf(index) !== -1;
+    }
+  },
+  mounted() {
   }
 })
 </script>
@@ -36,7 +52,16 @@ export default defineComponent ({
   <table>
     <thead>
       <tr>
-        <th v-for="(header, index) in this.tableHeaders" :key="index">{{header}}</th>
+        <th v-for="(header, index) in this.tableHeaders" :key="index">
+          <div>
+            {{header}}
+            <SearchComponent
+                v-if="isFieldSearchable(header.toLowerCase())"
+                :default-value="searchValues[header.toLowerCase()]"
+                :id="header.toLowerCase()"
+                :handle-input="onInput" />
+          </div>
+        </th>
       </tr>
     </thead>
     <tbody>

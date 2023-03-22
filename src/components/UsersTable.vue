@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
-import {onMounted, ref, computed} from "vue";
+import {computed, onMounted, ref} from "vue";
 
 import TableTemplate from "./Table/TableTemplate.vue";
 import PaginationComponent from "./PaginationComponent.vue";
@@ -9,11 +9,14 @@ const TABLE_HEADERS = ["ID", "NAME", "EMAIL", "BODY" ];
 const USERS_PER_PAGE = 50;
 
 const users = ref([]);
+type searchValuesType = {
+  [key: string]: string
+}
 let searchValues = ref({
-  id: "" as string,
-  name: "id" as string,
-  body: "" as string,
-});
+  "id": "",
+  "name": "id",
+  "body": "",
+} as searchValuesType);
 const usersPerPage: number = USERS_PER_PAGE;
 let currentPageNumber = ref(1);
 const getUsers = async() => {
@@ -65,6 +68,11 @@ const isDataFiltered = computed(() => {
 const handlePageClick = (page: number) => {
   currentPageNumber.value = page;
 }
+
+const handleInput = (event: InputEvent) => {
+  const id = (event?.target as HTMLInputElement)?.id;
+  searchValues.value[id as keyof searchValuesType] = (event?.target as HTMLInputElement)?.value;
+}
 onMounted(() => {
   getUsers().then(data => {
     users.value = data;
@@ -76,6 +84,8 @@ onMounted(() => {
 <template>
   <main>
     <TableTemplate
+        :search-values="searchValues"
+        :handle-input="handleInput"
         :table-data="isDataFiltered ? filteredItems : paginatedUsers"
         :table-headers="TABLE_HEADERS"
     />
