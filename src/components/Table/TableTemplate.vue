@@ -20,6 +20,10 @@ export default defineComponent ({
     }
   },
   props: {
+    deleteRow: {
+      type: Function,
+      required: false
+    },
     searchValues: {
       type: Object as PropType<Object>,
       required: false,
@@ -44,8 +48,6 @@ export default defineComponent ({
       return Object.keys(this.searchValues as Object).indexOf(index) !== -1;
     }
   },
-  mounted() {
-  }
 })
 </script>
 <template>
@@ -65,7 +67,12 @@ export default defineComponent ({
       </tr>
     </thead>
     <tbody>
-    <TableRow v-for="(row,index) in tableDataArray" :key="index" :row-data="row"/>
+    <TableRow
+        v-for="(row,index) in tableDataArray"
+        :key="index"
+        :row-data="row"
+        :delete-row="this.deleteRow"
+    />
     </tbody>
   </table>
 </template>

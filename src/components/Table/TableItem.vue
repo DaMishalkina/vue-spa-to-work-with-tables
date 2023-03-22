@@ -4,6 +4,6 @@ defineProps<{
 }>()
 </script>
 <template>
-  <td class="table__column">{{ value }}</td>
+  <td>{{ value }}</td>
 </template>
 <style></style>

@@ -9,14 +9,22 @@ const TABLE_HEADERS = ["ID", "NAME", "EMAIL", "BODY" ];
 const USERS_PER_PAGE = 50;
 
 const users = ref([]);
-type searchValuesType = {
+const usersArray = ref([]);
+type SearchValuesType = {
   [key: string]: string
+}
+type User = {
+  postId: string | number,
+  id: string | number,
+  name: string,
+  email: string,
+  body: string
 }
 let searchValues = ref({
   "id": "",
-  "name": "id",
+  "name": "",
   "body": "",
-} as searchValuesType);
+} as SearchValuesType);
 const usersPerPage: number = USERS_PER_PAGE;
 let currentPageNumber = ref(1);
 const getUsers = async() => {
@@ -31,12 +39,12 @@ const getUsers = async() => {
 const paginatedUsers = computed(() => {
   let from = (currentPageNumber.value-1)*usersPerPage;
   let to = from + usersPerPage;
-  const updatedData = JSON.parse(JSON.stringify(users.value));
+  const updatedData = JSON.parse(JSON.stringify(usersArray.value));
   return updatedData.slice(from, to);
 })
 
 const search = () => {
-  let result = [...users.value];
+  let result = [...usersArray.value];
   Object.entries(searchValues.value).forEach((searchValue: string[]) => {
     const [key, value]: string[] = searchValue;
     const newValue = value.toString().toLowerCase();
@@ -69,13 +77,18 @@ const handlePageClick = (page: number) => {
   currentPageNumber.value = page;
 }
 
+const deleteItem = (objectToDelete: User) =>{
+  usersArray.value = usersArray.value.filter(user => (user as User).id !== objectToDelete.id)
+}
+
 const handleInput = (event: InputEvent) => {
   const id = (event?.target as HTMLInputElement)?.id;
-  searchValues.value[id as keyof searchValuesType] = (event?.target as HTMLInputElement)?.value;
+  searchValues.value[id as keyof SearchValuesType] = (event?.target as HTMLInputElement)?.value;
 }
 onMounted(() => {
   getUsers().then(data => {
     users.value = data;
+    usersArray.value = [...users.value];
   });
 })
 
@@ -84,6 +97,7 @@ onMounted(() => {
 <template>
   <main>
     <TableTemplate
+        :delete-row="deleteItem"
         :search-values="searchValues"
         :handle-input="handleInput"
         :table-data="isDataFiltered ? filteredItems : paginatedUsers"

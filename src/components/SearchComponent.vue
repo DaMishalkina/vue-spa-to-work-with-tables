@@ -1,7 +1,10 @@
 <script lang="ts">
 import {defineComponent} from "vue";
 
+import IconSearch from "./icons/IconSearch.vue";
+
 export default defineComponent({
+  components: {IconSearch},
   props:{
     id: String,
     defaultType: String,
@@ -27,8 +30,22 @@ export default defineComponent({
 })
 </script>
 <template>
-  <label :for=this.id>
-    <input :id=this.id :type=this.type v-model=this.value @input="this.onInput">
+  <label :for=this.id class="search-container">
+    <input class="search-container__input" :id=this.id :type=this.type v-model=this.value @input="this.onInput">
+    <IconSearch class="search-container__icon" />
   </label>
 </template>
-<style></style>
+<style>
+.search-container {
+  position: relative;
+}
+.search-container__input {
+}
+.search-container__icon {
+  position: absolute;
+  width: 20%;
+  height: 100%;
+  right: 0;
+  top: 0;
+}
+</style>
