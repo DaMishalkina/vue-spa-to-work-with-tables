@@ -3,16 +3,18 @@ import {defineComponent} from "vue";
 
 import TableRow from "./TableRow.vue";
 import SearchComponent from "../SearchComponent.vue";
+import IconSort from "../icons/IconSort.vue";
 
 import type { PropType } from "vue";
 
+
 interface Object {
-  [key: string]: string | number
+  [key: string]: string | number | boolean
 }
 
 interface Objects extends Array<Object>{}
 export default defineComponent ({
-  components: {TableRow, SearchComponent},
+  components: {IconSort, TableRow, SearchComponent},
   data(){
     return {
       pageNumber: 1 as number,
@@ -20,6 +22,10 @@ export default defineComponent ({
     }
   },
   props: {
+    sortColumnData: {
+      type: Function,
+      required: false
+    },
     deleteRow: {
       type: Function,
       required: false
@@ -31,16 +37,23 @@ export default defineComponent ({
     handleInput: Function,
     tableHeaders: Array,
     tableData: {
-      type: Array as PropType<Objects>,
-      default: () =>  []
+      type: Array as PropType<Objects>
     }
   },
   computed: {
+    isAscendingObject(){
+      return this.tableHeaders?.reduce((a, v) => ({ ...(a as object), [v as string]: true}), {})
+    },
     tableDataArray(){
       return JSON.parse(JSON.stringify(this.tableData));
     }
   },
   methods:{
+    sortData(header: string, isAscending = true){
+      this.sortColumnData !== undefined && this.sortColumnData(header, isAscending);
+      (this.isAscendingObject as Object)[header] = !isAscending;
+      console.log(this.isAscendingObject)
+    },
     onInput(event: InputEvent){
       this.handleInput !== undefined && this.handleInput(event)
     },
@@ -62,6 +75,9 @@ export default defineComponent ({
                 :default-value="searchValues[header.toLowerCase()]"
                 :id="header.toLowerCase()"
                 :handle-input="onInput" />
+            <button @click="this.sortData(header, this.isAscendingObject[header])">
+              <IconSort />
+            </button>
           </div>
         </th>
       </tr>

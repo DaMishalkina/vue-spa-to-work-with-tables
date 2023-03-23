@@ -77,6 +77,25 @@ const handlePageClick = (page: number) => {
   currentPageNumber.value = page;
 }
 
+const compare = (a: string | number, b: string | number) => {
+  if(typeof a === "string"){
+    return a.localeCompare(b as string)
+  } else {
+    return a - (b as number)
+  }
+}
+
+const sortData = (header: string, isAscending = true) => {
+  const lowerCaseHeader = header.toLowerCase();
+  switch (isAscending){
+    case true:
+      usersArray.value.sort((a, b) => compare(a[lowerCaseHeader], b[lowerCaseHeader]));
+      break;
+    case false:
+      usersArray.value.sort((a, b) => compare(b[lowerCaseHeader], a[lowerCaseHeader]));
+  }
+}
+
 const deleteItem = (objectToDelete: User) =>{
   usersArray.value = usersArray.value.filter(user => (user as User).id !== objectToDelete.id)
 }
@@ -97,6 +116,7 @@ onMounted(() => {
 <template>
   <main>
     <TableTemplate
+        :sort-column-data="sortData"
         :delete-row="deleteItem"
         :search-values="searchValues"
         :handle-input="handleInput"
