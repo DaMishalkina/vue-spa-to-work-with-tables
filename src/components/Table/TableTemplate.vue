@@ -52,7 +52,6 @@ export default defineComponent ({
     sortData(header: string, isAscending = true){
       this.sortColumnData !== undefined && this.sortColumnData(header, isAscending);
       (this.isAscendingObject as Object)[header] = !isAscending;
-      console.log(this.isAscendingObject)
     },
     onInput(event: InputEvent){
       this.handleInput !== undefined && this.handleInput(event)

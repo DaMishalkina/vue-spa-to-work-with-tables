@@ -4,15 +4,11 @@ import {computed, onMounted, ref} from "vue";
 
 import TableTemplate from "./Table/TableTemplate.vue";
 import PaginationComponent from "./PaginationComponent.vue";
+import AddData from "./AddData.vue";
 
 const TABLE_HEADERS = ["ID", "NAME", "EMAIL", "BODY" ];
 const USERS_PER_PAGE = 50;
 
-const users = ref([]);
-const usersArray = ref([]);
-type SearchValuesType = {
-  [key: string]: string
-}
 type User = {
   postId: string | number,
   id: string | number,
@@ -20,6 +16,19 @@ type User = {
   email: string,
   body: string
 }
+
+const users = ref([] as User[]);
+const usersArray = ref([] as User[]);
+type SearchValuesType = {
+  [key: string]: string
+}
+
+interface DataField {
+  name: string,
+  type: string,
+  isVisible: boolean,
+}
+interface DataFields extends Array<DataField>{}
 let searchValues = ref({
   "id": "",
   "name": "",
@@ -50,7 +59,7 @@ const search = () => {
     const newValue = value.toString().toLowerCase();
     if (newValue !== ""){
       result = result.filter(user => {
-        return (user[key] as string).toString().toLowerCase().includes(newValue);
+        return (user[key as keyof User] as string).toString().toLowerCase().includes(newValue);
       })
     }
   })
@@ -62,6 +71,19 @@ const search = () => {
 
 const filteredItems = computed(() => {
   return search();
+})
+const dataFields = computed(() => {
+  const result: DataFields = [];
+ Object.entries(usersArray.value[0] || {}).map(entry => {
+   const [key, value] = entry;
+   const object = {
+     name: key,
+     type: typeof value,
+     isVisible: TABLE_HEADERS.indexOf(key.toUpperCase()) !== -1
+   }
+   result.push(object);
+ })
+  return result;
 })
 
 const isDataFiltered = computed(() => {
@@ -89,10 +111,12 @@ const sortData = (header: string, isAscending = true) => {
   const lowerCaseHeader = header.toLowerCase();
   switch (isAscending){
     case true:
-      usersArray.value.sort((a, b) => compare(a[lowerCaseHeader], b[lowerCaseHeader]));
+      usersArray.value.sort((a, b) =>
+          compare(a[lowerCaseHeader as keyof User], b[lowerCaseHeader as keyof User]));
       break;
     case false:
-      usersArray.value.sort((a, b) => compare(b[lowerCaseHeader], a[lowerCaseHeader]));
+      usersArray.value.sort((a, b) =>
+          compare(b[lowerCaseHeader as keyof User], a[lowerCaseHeader as keyof User]));
   }
 }
 
@@ -103,6 +127,10 @@ const deleteItem = (objectToDelete: User) =>{
 const handleInput = (event: InputEvent) => {
   const id = (event?.target as HTMLInputElement)?.id;
   searchValues.value[id as keyof SearchValuesType] = (event?.target as HTMLInputElement)?.value;
+}
+
+const handleSubmit = (data: User) => {
+  usersArray.value.push({...data});
 }
 onMounted(() => {
   getUsers().then(data => {
@@ -115,6 +143,7 @@ onMounted(() => {
 
 <template>
   <main>
+    <AddData :add-data="handleSubmit" :default-data-fields="dataFields" />
     <TableTemplate
         :sort-column-data="sortData"
         :delete-row="deleteItem"
