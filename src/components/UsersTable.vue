@@ -5,6 +5,7 @@ import {computed, onMounted, ref} from "vue";
 import TableTemplate from "./Table/TableTemplate.vue";
 import PaginationComponent from "./PaginationComponent.vue";
 import AddData from "./AddData.vue";
+import SearchComponent from "./SearchComponent.vue";
 
 const TABLE_HEADERS = ["ID", "NAME", "EMAIL", "BODY" ];
 const USERS_PER_PAGE = 50;
@@ -19,9 +20,6 @@ type User = {
 
 const users = ref([] as User[]);
 const usersArray = ref([] as User[]);
-type SearchValuesType = {
-  [key: string]: string
-}
 
 interface DataField {
   name: string,
@@ -29,11 +27,7 @@ interface DataField {
   isVisible: boolean,
 }
 interface DataFields extends Array<DataField>{}
-let searchValues = ref({
-  "id": "",
-  "name": "",
-  "body": "",
-} as SearchValuesType);
+let searchValue = ref("");
 const usersPerPage: number = USERS_PER_PAGE;
 let currentPageNumber = ref(1);
 const getUsers = async() => {
@@ -54,15 +48,12 @@ const paginatedUsers = computed(() => {
 
 const search = () => {
   let result = [...usersArray.value];
-  Object.entries(searchValues.value).forEach((searchValue: string[]) => {
-    const [key, value]: string[] = searchValue;
-    const newValue = value.toString().toLowerCase();
-    if (newValue !== ""){
-      result = result.filter(user => {
-        return (user[key as keyof User] as string).toString().toLowerCase().includes(newValue);
-      })
-    }
-  })
+  const newSearchValue = searchValue.value.toString().toLowerCase();
+  if (newSearchValue !== ""){
+    result = result.filter(user => {
+      return Object.values(user).join("").toString().toLowerCase().includes(newSearchValue)
+    })
+  }
 
   return result;
 };
@@ -87,12 +78,7 @@ const dataFields = computed(() => {
 })
 
 const isDataFiltered = computed(() => {
-  const trueArray: boolean[] = [];
-  Object.values(searchValues.value).forEach(value => {
-    value.toString().length > 0 && trueArray.push(true)
-  });
-
-  return trueArray.length > 0;
+  return searchValue.value.length > 0;
 })
 
 const handlePageClick = (page: number) => {
@@ -125,8 +111,7 @@ const deleteItem = (objectToDelete: User) =>{
 }
 
 const handleInput = (event: InputEvent) => {
-  const id = (event?.target as HTMLInputElement)?.id;
-  searchValues.value[id as keyof SearchValuesType] = (event?.target as HTMLInputElement)?.value;
+  searchValue.value = (event?.target as HTMLInputElement)?.value;
 }
 
 const handleSubmit = (data: User) => {
@@ -143,11 +128,15 @@ onMounted(() => {
 
 <template>
   <main>
+    <SearchComponent
+        :handle-input="handleInput"
+        :default-value="searchValue"
+        :default-type="typeof searchValue.value"
+    />
     <AddData :add-data="handleSubmit" :default-data-fields="dataFields" />
     <TableTemplate
         :sort-column-data="sortData"
         :delete-row="deleteItem"
-        :search-values="searchValues"
         :handle-input="handleInput"
         :table-data="isDataFiltered ? filteredItems : paginatedUsers"
         :table-headers="TABLE_HEADERS"

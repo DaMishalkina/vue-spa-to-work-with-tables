@@ -2,7 +2,6 @@
 import {defineComponent} from "vue";
 
 import TableRow from "./TableRow.vue";
-import SearchComponent from "../SearchComponent.vue";
 import IconSort from "../icons/IconSort.vue";
 
 import type { PropType } from "vue";
@@ -14,7 +13,7 @@ interface Object {
 
 interface Objects extends Array<Object>{}
 export default defineComponent ({
-  components: {IconSort, TableRow, SearchComponent},
+  components: {IconSort, TableRow},
   data(){
     return {
       pageNumber: 1 as number,
@@ -29,10 +28,6 @@ export default defineComponent ({
     deleteRow: {
       type: Function,
       required: false
-    },
-    searchValues: {
-      type: Object as PropType<Object>,
-      required: false,
     },
     handleInput: Function,
     tableHeaders: Array,
@@ -56,25 +51,18 @@ export default defineComponent ({
     onInput(event: InputEvent){
       this.handleInput !== undefined && this.handleInput(event)
     },
-    isFieldSearchable(index: string){
-      return Object.keys(this.searchValues as Object).indexOf(index) !== -1;
-    }
   },
 })
 </script>
 <template>
-  <table>
-    <thead>
-      <tr>
-        <th v-for="(header, index) in this.tableHeaders" :key="index">
-          <div>
+  <table class="table">
+    <thead class="table__heading">
+      <tr class="table__headers">
+        <th class="header table__header" v-for="(header, index) in this.tableHeaders" :key="index">
+          <div class="header-container">
+            <div></div>
             {{header}}
-            <SearchComponent
-                v-if="isFieldSearchable(header.toLowerCase())"
-                :default-value="searchValues[header.toLowerCase()]"
-                :id="header.toLowerCase()"
-                :handle-input="onInput" />
-            <button @click="this.sortData(header, this.isAscendingObject[header])">
+            <button class="header-container__button button" @click="this.sortData(header, this.isAscendingObject[header])">
               <IconSort />
             </button>
           </div>
@@ -92,4 +80,7 @@ export default defineComponent ({
   </table>
 </template>
 <style>
+.header-container {
+  display: flex;
+}
 </style>
