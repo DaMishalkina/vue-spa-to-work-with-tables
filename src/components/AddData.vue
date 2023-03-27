@@ -63,16 +63,75 @@ export default defineComponent({
 
 </script>
 <template>
-  <form @submit.prevent="onSubmit">
-    <label v-for="(field, index) in this.dataFields" :key="index" :for="field.name">
+  <form @submit.prevent="onSubmit" class="add-data form--add-data">
+    <label class="add-data__label" v-for="(field, index) in this.dataFields" :key="index" :for="field.name">
       {{field.name}}
       <input
+          class="add-data__input"
           :id="field.name"
           :type="field.type"
           v-model.trim="this.addedData[field.name]"
       >
     </label>
-    <button type="submit">Submit</button>
+    <button class="add-data__button" type="submit">Submit</button>
   </form>
 </template>
-<style></style>
+<style>
+.add-data {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+.add-data__button {
+  display: flex;
+  padding: 8px 12px;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  border-radius: 8px;
+  background: #624DE3;
+  border: 1px solid #624DE3;
+  font-weight: 500;
+  font-size: 12px;
+}
+.add-data__button:hover{
+  background-color: #F7F6FE;
+  color: #624DE3;
+}
+.add-data__button:focus {
+  color: #ffffff;
+  background-color: rgba(98, 77, 227, 0.7);
+  border: 1px solid rgba(98, 77, 227, 0.0);
+}
+.add-data__label {
+  display: flex;
+  flex-direction: column;
+  text-transform: capitalize;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 17px;
+}
+.add-data__input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 9px;
+  border: 1px solid #9E9E9E;
+  border-radius: 8px;
+}
+
+.add-data__input:focus {
+  outline: none ;
+  border-color: #624DE3;
+}
+
+.add-data__input::placeholder{
+  font-family: "Montserrat", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 15px;
+  text-transform: capitalize;
+  color: #9E9E9E;
+}
+</style>

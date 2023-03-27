@@ -6,6 +6,7 @@ import TableTemplate from "./Table/TableTemplate.vue";
 import PaginationComponent from "./PaginationComponent.vue";
 import AddData from "./AddData.vue";
 import SearchComponent from "./SearchComponent.vue";
+import IconPlus from "./icons/IconPlus.vue";
 
 const TABLE_HEADERS = ["ID", "NAME", "EMAIL", "BODY" ];
 const USERS_PER_PAGE = 50;
@@ -30,6 +31,7 @@ interface DataFields extends Array<DataField>{}
 let searchValue = ref("");
 const usersPerPage: number = USERS_PER_PAGE;
 let currentPageNumber = ref(1);
+let isUserFormVisible = ref(false);
 const getUsers = async() => {
   try {
     const response = await axios.get("db.json");
@@ -70,7 +72,7 @@ const dataFields = computed(() => {
    const object = {
      name: key,
      type: typeof value,
-     isVisible: TABLE_HEADERS.indexOf(key.toUpperCase()) !== -1
+     isVisible: key !== "id" && key !== "postId"
    }
    result.push(object);
  })
@@ -114,8 +116,17 @@ const handleInput = (event: InputEvent) => {
   searchValue.value = (event?.target as HTMLInputElement)?.value;
 }
 
+const isPaginated = computed(() => {
+  return Math.ceil(usersArray.value.length/usersPerPage) > 1;
+})
+
 const handleSubmit = (data: User) => {
+  data.id = usersArray.value.length + 1;
+  console.log(data)
   usersArray.value.push({...data});
+}
+const toggleNewUserForm = () => {
+  isUserFormVisible.value = !isUserFormVisible.value;
 }
 onMounted(() => {
   getUsers().then(data => {
@@ -127,14 +138,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <main>
-    <SearchComponent
-        :handle-input="handleInput"
-        :default-value="searchValue"
-        :default-type="typeof searchValue.value"
-    />
-    <AddData :add-data="handleSubmit" :default-data-fields="dataFields" />
+  <header>
+    <div class="page-header">
+      <SearchComponent
+          :handle-input="handleInput"
+          :default-value="searchValue"
+      />
+      <button class="add-button page-header__button" @click="toggleNewUserForm">
+        <IconPlus class="add-button__icon" />
+        Add user
+      </button>
+    </div>
+  </header>
+  <main class="page-main">
+    <AddData v-if="isUserFormVisible" :add-data="handleSubmit" :default-data-fields="dataFields" />
     <TableTemplate
+        :class="{'table-container--height90': isPaginated, 'table-container--height100': !isPaginated }"
         :sort-column-data="sortData"
         :delete-row="deleteItem"
         :handle-input="handleInput"
@@ -142,11 +161,57 @@ onMounted(() => {
         :table-headers="TABLE_HEADERS"
     />
     <PaginationComponent
-        v-if="!isDataFiltered"
+        v-if="!isDataFiltered && isPaginated"
         :handle-page-click="handlePageClick"
         :default-items-per-page="usersPerPage"
         :default-page-number="currentPageNumber"
-        :data="users"
+        :data="usersArray"
     />
   </main>
 </template>
+<style>
+.page-header {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  justify-content: space-between;
+  gap: 16px;
+}
+.page-header__button {
+  display: flex;
+  padding: 8px 12px;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  border-radius: 8px;
+  background: #624DE3;
+  border: 1px solid #624DE3;
+  font-weight: 500;
+  font-size: 12px;
+}
+.page-header__button:hover{
+  background-color: #F7F6FE;
+  color: #624DE3;
+}
+.page-header__button:focus {
+  color: #ffffff;
+  background-color: rgba(98, 77, 227, 0.7);
+  border: 1px solid rgba(98, 77, 227, 0.0);
+}
+.add-button__icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.page-main {
+  height: 100vh;
+}
+.table-container--height90 {
+  height: 90%;
+}
+.table-container--height100 {
+  height: 100%;
+}
+
+</style>

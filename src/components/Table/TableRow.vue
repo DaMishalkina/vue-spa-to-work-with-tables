@@ -37,12 +37,12 @@ export default defineComponent({
 <template>
   <tr class="table__row">
     <TableItem v-for="(value, index) in rowDataValues.splice(1)" :key=index :value="value"/>
-    <td v-if="deleteRow" class="column table__column">
+    <td v-if="deleteRow" class="column column--actions table__column">
       <button
           class="column-button column__button"
           @click="this.deleteRow(this.rowData)"
       >
-        <IconDelete class="column-button--delete" />
+        <IconDelete class="icon--delete column-button__icon" />
       </button>
     </td>
   </tr>
@@ -50,9 +50,19 @@ export default defineComponent({
 <style>
 .column-button {
   padding: 12px;
+  background-color: transparent;
+  border-style: none;
+  color: #A30D11;
 }
-.column-button--delete {
-  height: 16px;
-  width: 16px;
+.column-button__icon {
+  height: 24px;
+  width: 24px;
+}
+.table__row:nth-child(odd){
+  background: #F7F6FE;
+}
+.column--actions {
+  display: flex;
+  justify-content: center;
 }
 </style>

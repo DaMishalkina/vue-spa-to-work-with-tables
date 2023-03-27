@@ -55,32 +55,86 @@ export default defineComponent ({
 })
 </script>
 <template>
-  <table class="table">
-    <thead class="table__heading">
+  <div class="table-container">
+    <table class="table">
+      <thead class="table__heading">
       <tr class="table__headers">
         <th class="header table__header" v-for="(header, index) in this.tableHeaders" :key="index">
           <div class="header-container">
-            <div></div>
             {{header}}
-            <button class="header-container__button button" @click="this.sortData(header, this.isAscendingObject[header])">
-              <IconSort />
+            <button class="sort-button header-container__button" @click="this.sortData(header, this.isAscendingObject[header])">
+              <IconSort class="sort-button__icon" />
             </button>
           </div>
         </th>
+        <th class="header table__header" v-if="this.deleteRow || false">
+          Actions
+        </th>
       </tr>
-    </thead>
-    <tbody>
-    <TableRow
-        v-for="(row,index) in tableDataArray"
-        :key="index"
-        :row-data="row"
-        :delete-row="this.deleteRow"
-    />
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+      <TableRow
+          v-for="(row,index) in tableDataArray"
+          :key="index"
+          :row-data="row"
+          :delete-row="this.deleteRow"
+      />
+      </tbody>
+    </table>
+  </div>
 </template>
 <style>
+.table-container {
+  overflow: auto;
+  /*height: 90%;*/
+}
+.table {
+  position: relative;
+  display: block;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout:fixed
+}
+.table__heading {
+}
+.table__header {
+  background: white;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 16px 8px;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  text-transform: uppercase;
+  /*box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);*/
+}
+
+.table__header:first-child {
+  padding: 16px 8px 16px 16px;
+}
+
+.table__header:last-child {
+  padding: 16px 16px 16px 8px;
+}
+
 .header-container {
   display: flex;
+  justify-content: space-between;
+}
+
+.header-container__button {
+  width: 16px;
+  height: 16px;
+  border-style: none;
+  padding: 0;
+  color: #9E9E9E;
+  background-color: transparent;
+}
+
+.sort-button__icon {
+  width: 16px;
+  height: 16px;
 }
 </style>

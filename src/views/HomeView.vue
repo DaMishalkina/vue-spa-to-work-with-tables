@@ -3,7 +3,5 @@ import UsersTable from "../components/UsersTable.vue";
 </script>
 
 <template>
-  <main>
-    <UsersTable />
-  </main>
+  <UsersTable />
 </template>
