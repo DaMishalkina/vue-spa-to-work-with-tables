@@ -34,7 +34,7 @@ let currentPageNumber = ref(1);
 let isUserFormVisible = ref(false);
 const getUsers = async() => {
   try {
-    const response = await axios.get("https://damishalkina.github.io/ue-spa-to-work-with-tables/db.json");
+    const response = await axios.get("https://damishalkina.github.io/vue-spa-to-work-with-tables/db.json");
     response.headers.common['Access-Control-Allow-Origin'] = '*';
     return response.data.users
   }
