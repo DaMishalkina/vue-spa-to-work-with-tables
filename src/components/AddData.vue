@@ -29,17 +29,18 @@ export default defineComponent({
   },
   computed: {
     dataFields(){
-      return this.defaultDataFields?.filter(field => field.isVisible);
+      return this.defaultDataFields?.filter((field: DataField) => field.isVisible);
     },
     addedData(){
-      return this.defaultDataFields?.reduce((a, v) => ({ ...(a as object), [v.name]: ""}), {})
+      return this.defaultDataFields?.reduce((a: object, v: DataField) => ({ ...(a as object), [v.name]: ""}), {})
     }
   },
   methods: {
-    onSubmit(event: SubmitEvent){
+    onSubmit(event: Event){
       const isAllFieldsFilledArray = [];
       Object.values(this.addedData as Object).map((value) => {
-        const isVisible = this.dataFields !== undefined && this.dataFields.find(field => field.isVisible);
+        const isVisible = this.dataFields !== undefined &&
+            this.dataFields.find((field: DataField) => field.isVisible);
         if(isVisible && value !== ""){
           isAllFieldsFilledArray.push(true);
         }

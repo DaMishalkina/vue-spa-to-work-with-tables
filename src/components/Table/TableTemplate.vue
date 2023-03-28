@@ -37,7 +37,7 @@ export default defineComponent ({
   },
   computed: {
     isAscendingObject(){
-      return this.tableHeaders?.reduce((a, v) => ({ ...(a as object), [v as string]: true}), {})
+      return this.tableHeaders?.reduce((a: object, v: string) => ({ ...a, [v as string]: true}), {})
     },
     tableDataArray(){
       return JSON.parse(JSON.stringify(this.tableData));
