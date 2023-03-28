@@ -86,11 +86,9 @@ export default defineComponent ({
 <style>
 .table-container {
   overflow: auto;
-  /*height: 90%;*/
 }
 .table {
   position: relative;
-  display: block;
   width: 100%;
   border-collapse: collapse;
   table-layout:fixed
@@ -136,5 +134,12 @@ export default defineComponent ({
 .sort-button__icon {
   width: 16px;
   height: 16px;
+}
+
+@media (min-width: 768px) {
+  .table-container {
+    overflow: unset;
+  }
+
 }
 </style>

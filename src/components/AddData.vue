@@ -83,6 +83,7 @@ export default defineComponent({
   padding: 16px;
   margin-bottom: 16px;
   gap: 16px;
+  max-width: 768px;
 }
 .add-data__button {
   display: flex;
@@ -133,5 +134,14 @@ export default defineComponent({
   line-height: 15px;
   text-transform: capitalize;
   color: #9E9E9E;
+}
+
+@media (min-width: 1024px) {
+  .add-data {
+
+  }
+  .add-data__button {
+
+  }
 }
 </style>

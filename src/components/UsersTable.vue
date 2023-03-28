@@ -138,22 +138,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <header>
-    <div class="page-header">
-      <SearchComponent
-          :handle-input="handleInput"
-          :default-value="searchValue"
-      />
-      <button class="add-button page-header__button" @click="toggleNewUserForm">
-        <IconPlus class="add-button__icon" />
-        Add user
-      </button>
-    </div>
-  </header>
-  <main class="page-main">
+  <section class="section-header">
+    <SearchComponent
+        :handle-input="handleInput"
+        :default-value="searchValue"
+    />
+    <button class="add-button section-header__button" @click="toggleNewUserForm">
+      <IconPlus class="add-button__icon" />
+      Add user
+    </button>
+  </section>
+  <section class="section-main">
     <AddData v-if="isUserFormVisible" :add-data="handleSubmit" :default-data-fields="dataFields" />
     <TableTemplate
-        :class="{'table-container--height90': isPaginated, 'table-container--height100': !isPaginated }"
+        :class="{
+        'table-container--height90': isPaginated,
+        'table-container--height100': !isPaginated }"
         :sort-column-data="sortData"
         :delete-row="deleteItem"
         :handle-input="handleInput"
@@ -167,17 +167,17 @@ onMounted(() => {
         :default-page-number="currentPageNumber"
         :data="usersArray"
     />
-  </main>
+  </section>
 </template>
 <style>
-.page-header {
+.section-header {
   display: flex;
   flex-direction: column;
   padding: 16px;
   justify-content: space-between;
   gap: 16px;
 }
-.page-header__button {
+.section-header__button {
   display: flex;
   padding: 8px 12px;
   align-items: center;
@@ -189,11 +189,11 @@ onMounted(() => {
   font-weight: 500;
   font-size: 12px;
 }
-.page-header__button:hover{
+.section-header__button:hover{
   background-color: #F7F6FE;
   color: #624DE3;
 }
-.page-header__button:focus {
+.section-header__button:focus {
   color: #ffffff;
   background-color: rgba(98, 77, 227, 0.7);
   border: 1px solid rgba(98, 77, 227, 0.0);
@@ -204,7 +204,7 @@ onMounted(() => {
   margin-right: 8px;
 }
 
-.page-main {
+.section-main {
   height: 100vh;
 }
 .table-container--height90 {
@@ -212,6 +212,19 @@ onMounted(() => {
 }
 .table-container--height100 {
   height: 100%;
+}
+
+@media (min-width: 768px) {
+  .section-header {
+    flex-direction: row;
+  }
+  .section-main {
+    height: 100%;
+  }
+}
+
+@media (min-width: 1024px) {
+
 }
 
 </style>
