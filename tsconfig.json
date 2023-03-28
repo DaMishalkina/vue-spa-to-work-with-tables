@@ -6,6 +6,7 @@
     "noImplicitThis": false,
     "strict": true,
     "target": "esnext",
+    "types": ["node"],
     "lib": ["esnext", "dom"],
     "baseUrl": ".",
     "paths": {
