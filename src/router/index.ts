@@ -5,12 +5,12 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: 'https://damishalkina.github.io/vue-spa-to-work-with-tables/',
       name: 'home',
       component: HomeView
     },
     {
-      path: '/about',
+      path: 'https://damishalkina.github.io/vue-spa-to-work-with-tables/about',
       name: 'about',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
