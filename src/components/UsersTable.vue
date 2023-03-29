@@ -123,8 +123,9 @@ const isPaginated = computed(() => {
 })
 
 const handleSubmit = (data: User) => {
-  data.id = usersArray.value.length + 1;
-  console.log(data)
+  const arrToSort = [...usersArray.value];
+  const ascendingSortedArr = arrToSort.sort((a,b) => compare(a.id, b.id));
+  data.id = (ascendingSortedArr[ascendingSortedArr.length -1].id as number) + 1;
   usersArray.value.push({...data});
 }
 const toggleNewUserForm = () => {
