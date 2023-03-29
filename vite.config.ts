@@ -9,7 +9,7 @@ export default defineConfig({
   // base: process.env.NODE_ENV === "production" ?
   //     "https://damishalkina.github.io/vue-spa-to-work-with-tables/"
   //     : "/",
-  base: "/",
+  base: "",
   plugins: [vue(), vueJsx()],
   resolve: {
     alias: {
