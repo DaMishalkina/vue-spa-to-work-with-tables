@@ -35,7 +35,8 @@ let isUserFormVisible = ref(false);
 const getUsers = async() => {
   try {
     const response = await axios.get(process.env.NODE_ENV === "production"
-        ? "https://damishalkina.github.io/vue-spa-to-work-with-tables/db.json" : "db.json");
+        ? "https://raw.githubusercontent.com/DaMishalkina/vue-spa-to-work-with-tables/main/db.json"
+        : "db.json");
     return response.data.users
   }
   catch (error){
