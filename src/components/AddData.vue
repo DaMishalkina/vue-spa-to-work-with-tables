@@ -23,8 +23,9 @@ export default defineComponent({
     },
     defaultDataFields: Array as PropType<DataFields>
   },
-  data() {
+  data(){
     return {
+      isAllFieldsFilled: Boolean,
     }
   },
   computed: {
@@ -33,7 +34,7 @@ export default defineComponent({
     },
     addedData(){
       return this.defaultDataFields?.reduce((a: object, v: DataField) => ({ ...(a as object), [v.name]: ""}), {})
-    }
+    },
   },
   methods: {
     onSubmit(event: Event){
@@ -45,27 +46,29 @@ export default defineComponent({
           isAllFieldsFilledArray.push(true);
         }
       })
-      const isAllFieldsFilled = isAllFieldsFilledArray.length === Object.keys(this.dataFields as DataFields).length;
-      if(isAllFieldsFilled){
+      this.isAllFieldsFilled =
+          isAllFieldsFilledArray.length === Object.keys(this.dataFields as DataFields).length;
+      if(this.isAllFieldsFilled){
         this.addData !== undefined && this.addData(this.addedData);
         Object.keys(this.addedData as Object).forEach(key=> {
           (this.addedData as Object)[key as keyof Object] = "";
         })
         const target = event.target as HTMLFormElement;
         target?.reset();
-      } else {
-        alert("Please fill all required fields")
       }
     }
-  },
-  mounted() {
   }
 })
 
 </script>
 <template>
   <form @submit.prevent="onSubmit" class="add-data form--add-data">
-    <label class="add-data__label" v-for="(field, index) in this.dataFields" :key="index" :for="field.name">
+    <label
+        class="add-data__label"
+
+        v-for="(field, index) in this.dataFields"
+        :key="index"
+        :for="field.name">
       {{field.name}}
       <input
           class="add-data__input"
@@ -74,6 +77,12 @@ export default defineComponent({
           v-model.trim="this.addedData[field.name]"
       >
     </label>
+    <div
+        class="warning-message add-data__warning-message"
+        :class="{'warning-message--hidden': this.isAllFieldsFilled}"
+    >
+      <span>Please fill all required fields</span>
+    </div>
     <button class="add-data__button" type="submit">Submit</button>
   </form>
 </template>
@@ -137,12 +146,12 @@ export default defineComponent({
   color: #9E9E9E;
 }
 
-@media (min-width: 1024px) {
-  .add-data {
-
-  }
-  .add-data__button {
-
-  }
+.add-data__warning-message {
+  font-size: 14px;
+  line-height: 17px;
+  color: #A30D11;
+}
+.warning-message--hidden {
+  visibility: hidden;
 }
 </style>
