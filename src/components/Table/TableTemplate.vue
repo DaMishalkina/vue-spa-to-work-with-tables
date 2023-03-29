@@ -89,7 +89,6 @@ export default defineComponent ({
 }
 .table {
   position: relative;
-  width: 100%;
   border-collapse: collapse;
   table-layout:fixed
 }
@@ -136,10 +135,12 @@ export default defineComponent ({
   height: 16px;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
+  .table {
+    width: 100%;
+  }
   .table-container {
     overflow: unset;
   }
-
 }
 </style>
