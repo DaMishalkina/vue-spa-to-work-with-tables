@@ -7,6 +7,7 @@ import PaginationComponent from "./PaginationComponent.vue";
 import AddData from "./AddData.vue";
 import SearchComponent from "./SearchComponent.vue";
 import IconPlus from "./icons/IconPlus.vue";
+import CustomButton from "@/components/CustomButton.vue";
 
 const TABLE_HEADERS = ["ID", "NAME", "EMAIL", "BODY" ];
 const USERS_PER_PAGE = 50;
@@ -146,10 +147,11 @@ onMounted(() => {
         :handle-input="handleInput"
         :default-value="searchValue"
     />
-    <button class="add-button section-header__button" @click="toggleNewUserForm">
-      <IconPlus class="add-button__icon" />
+    <CustomButton :onClick="toggleNewUserForm"
+    >
+      <IconPlus class="icon--plus button__icon" />
       Add user
-    </button>
+    </CustomButton>
   </section>
   <section class="section-main">
     <AddData v-if="isUserFormVisible" :add-data="handleSubmit" :default-data-fields="dataFields" />
@@ -180,28 +182,8 @@ onMounted(() => {
   justify-content: space-between;
   gap: 16px;
 }
-.section-header__button {
-  display: flex;
-  padding: 8px 12px;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  border-radius: 8px;
-  background: #624DE3;
-  border: 1px solid #624DE3;
-  font-weight: 500;
-  font-size: 12px;
-}
-.section-header__button:hover{
-  background-color: #F7F6FE;
-  color: #624DE3;
-}
-.section-header__button:focus {
-  color: #ffffff;
-  background-color: rgba(98, 77, 227, 0.7);
-  border: 1px solid rgba(98, 77, 227, 0.0);
-}
-.add-button__icon {
+
+.button__icon {
   width: 16px;
   height: 16px;
   margin-right: 8px;
@@ -224,10 +206,6 @@ onMounted(() => {
   .section-main {
     height: 100%;
   }
-}
-
-@media (min-width: 1024px) {
-
 }
 
 </style>

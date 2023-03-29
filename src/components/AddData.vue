@@ -1,8 +1,8 @@
 <script lang="ts">
 
+import type {PropType} from "vue";
 import {defineComponent} from "vue";
-
-import type { PropType } from "vue";
+import CustomButton from "./CustomButton.vue";
 
 interface DataField {
   name: string,
@@ -17,6 +17,7 @@ interface Object {
 interface DataFields extends Array<DataField>{}
 
 export default defineComponent({
+  components: {CustomButton},
   props: {
     addData: {
       type: Function
@@ -56,6 +57,11 @@ export default defineComponent({
         const target = event.target as HTMLFormElement;
         target?.reset();
       }
+    },
+    onInput(event: Event){
+      const id = (event.target as HTMLFormElement).id;
+      this.addedData[id] = (event.target as HTMLFormElement).value;
+      this.isAllFieldsFilled = true;
     }
   }
 })
@@ -74,7 +80,7 @@ export default defineComponent({
           class="add-data__input"
           :id="field.name"
           :type="field.type"
-          v-model.trim="this.addedData[field.name]"
+          @input="this.onInput"
       >
     </label>
     <div
@@ -83,7 +89,7 @@ export default defineComponent({
     >
       <span>Please fill all required fields</span>
     </div>
-    <button class="add-data__button" type="submit">Submit</button>
+    <CustomButton type="submit">Submit</CustomButton>
   </form>
 </template>
 <style>
@@ -94,27 +100,6 @@ export default defineComponent({
   margin-bottom: 16px;
   gap: 16px;
   max-width: 768px;
-}
-.add-data__button {
-  display: flex;
-  padding: 8px 12px;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  border-radius: 8px;
-  background: #624DE3;
-  border: 1px solid #624DE3;
-  font-weight: 500;
-  font-size: 12px;
-}
-.add-data__button:hover{
-  background-color: #F7F6FE;
-  color: #624DE3;
-}
-.add-data__button:focus {
-  color: #ffffff;
-  background-color: rgba(98, 77, 227, 0.7);
-  border: 1px solid rgba(98, 77, 227, 0.0);
 }
 .add-data__label {
   display: flex;

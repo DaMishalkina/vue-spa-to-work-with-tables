@@ -88,6 +88,7 @@ export default defineComponent ({
   overflow: auto;
 }
 .table {
+  min-width: 100%;
   position: relative;
   border-collapse: collapse;
   table-layout:fixed
